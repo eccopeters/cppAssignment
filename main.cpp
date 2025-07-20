@@ -178,8 +178,12 @@ DatabaseManager* DatabaseManager::instance_ = nullptr;
 
 // Main function with API routes
 int main() {
-    crow::SimpleApp app;
+    crow::App<crow::CORSHandler> app; // Use App with CORSHandler middleware
     DatabaseManager& db = DatabaseManager::getInstance();
+
+   
+    auto& cors = app.get_middleware<crow::CORSHandler>();
+    cors.global().prefix("*");
 
     // GET /halls: List all halls
     CROW_ROUTE(app, "/halls").methods("GET"_method)([&db]() {
